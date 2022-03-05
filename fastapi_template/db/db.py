@@ -1,4 +1,7 @@
-from sqlalchemy import create_engine, session_maker
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+from fastapi_template.core.settings import get_settings
 
 
 class Database:
@@ -10,7 +13,7 @@ class Database:
         autoflush: bool = False,
     ):
         self._engine = create_engine(db_url, echo=echo)
-        self._session = session_maker(
+        self._session = sessionmaker(
             bind=self._engine,
             autocommit=autocommit,
             autoflush=autoflush,
@@ -24,11 +27,13 @@ class Database:
         self._engine.dispose()
 
 
-def get_db_session():
-    db = Database()
+def get_db_session(settings=get_settings()):
+    db = Database(db_url=settings.database.db_url)
     with db.session() as session:
         try:
             yield session
         except Exception:
             session.rollback()
             raise
+        finally:
+            session.commit()

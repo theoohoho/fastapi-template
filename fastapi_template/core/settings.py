@@ -1,14 +1,26 @@
 from typing import List
-from pydantic import BaseSettings, AnyHttpUrl
+
+from pydantic import AnyHttpUrl, BaseSettings
+
+
+class JWTSettings(BaseSettings):
+    secret_key = "f0fb3cee57236e3d60b4197e6ffc4baa813c17ab706ad9628429f238049c57e4"
+    algorithm = "HS256"
+    access_token_expire_minutes = 30
+    refresh_token_expire_minutes = 60 * 24 * 7
+
+    class Config:
+        env_prefix = "JET_"
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 
 class DatabaseSettings(BaseSettings):
-
-    host: str = ""
-    port: str = ""
-    username: str = ""
-    password: str = ""
-    name: str = ""
+    host: str = "127.0.0.1"
+    port: str = "5432"
+    username: str = "local_dev"
+    password: str = "local_dev"
+    name: str = "local_dev"
 
     class Config:
         env_prefix = "DB_"
@@ -38,5 +50,15 @@ class Settings(BaseSettings):
 
     database: DatabaseSettings = DatabaseSettings()
 
+    jwt: JWTSettings = JWTSettings()
+
 
 settings = Settings()
+
+
+def get_settings():
+    global settings
+    if settings:
+        return settings
+    else:
+        return Settings()
