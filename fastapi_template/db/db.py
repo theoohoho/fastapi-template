@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -27,7 +29,8 @@ class Database:
         self._engine.dispose()
 
 
-def get_db_session(settings=get_settings()):
+def get_db_session():
+    settings = get_settings()
     db = Database(db_url=settings.database.db_url)
     with db.session() as session:
         try:
@@ -37,3 +40,19 @@ def get_db_session(settings=get_settings()):
             raise
         finally:
             session.commit()
+
+
+@contextmanager
+def get_cmd_db_session():
+    settings = get_settings()
+    db = Database(db_url=settings.database.db_url)
+    with db.session() as session:
+        try:
+            yield session
+        except Exception:
+            session.rollback()
+            raise
+        finally:
+            print("commit")
+            session.commit()
+    print("done.")
