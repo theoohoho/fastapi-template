@@ -8,6 +8,7 @@ class JWTSettings(BaseSettings):
     algorithm = "HS256"
     access_token_expire_minutes = 30
     refresh_token_expire_minutes = 60 * 24 * 7
+    reset_password_aud = "reset_password_aud"
 
     class Config:
         env_prefix = "JET_"

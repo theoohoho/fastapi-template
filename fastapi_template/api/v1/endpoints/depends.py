@@ -41,6 +41,12 @@ def get_current_user(
     return user
 
 
+def get_current_token(
+    token: str = Depends(oauth2_scheme),
+):
+    return token
+
+
 async def get_current_active_user(
     current_user: model_user.User = Depends(get_current_user),
 ):
