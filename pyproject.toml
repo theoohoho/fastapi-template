@@ -6,13 +6,24 @@ authors = ["theoohoho <topslimer@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-fastapi = "0.70.0"
-loguru = "0.6.0"
+fastapi = "0.95.0"
+loguru = "^0.7.0"
+uvicorn = "^0.21.1"
+python-multipart = "^0.0.6"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+sqlalchemy = "^2.0.23"
+pydantic = {version = "1.10.13", extras = ["email"]}
+alembic = "^1.12.1"
+httpx = "^0.25.2"
+psycopg2-binary = "^2.9.9"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
-flake8 = "4.0.1"
-black = "22.6.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+flake8 = "^6.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

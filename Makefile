@@ -4,16 +4,33 @@ PYTHON_VERSION ?= "3.9.6"
 
 ##@ Dev
 
-run: ## Run api server
-	poetry run uvicorn main:app
+api: ## Run api server
+	poetry run uvicorn fastapi_template.main:app
 
-run-dev: ## Run api server for dev mode
-	poetry run uvicorn main:app --reload
+api-dev: ## Run api server for dev mode
+	poetry run uvicorn fastapi_template.main:app --reload
 
-install:
+install: ## Run install
 	poetry install
 
-.PHONY: install run run-dev
+test: ## Run pytest
+	poetry run pytest ./fastapi_template/tests/ -vv
+
+mypy: ## Run mypy
+	poetry mypy fastapi_template
+
+.PHONY: install run run-dev mypy
+
+##@ Migration
+
+alembic-revision: ## Create a revision
+	poetry run alembic revision --autogenerate -m $(msg)
+
+
+alembic-upgrade: ## Upgrade to head
+	poetry run alembic upgrade head
+
+.PHONY: alembic-revision alembic-upgrade
 
 ##@ Help
 
